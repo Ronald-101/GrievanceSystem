@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head content -->
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        /* Custom styles for this template */
+        body {
+            font-size: 0.875rem;
+        }
+
+        .feather {
+            width: 16px;
+            height: 16px;
+            vertical-align: text-bottom;
+        }
+
+        .navbar {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .sidenav {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #007bff;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 15px 8px 15px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #ffffff;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            background-color: #0056b3;
+            color: #ffffff;
+        }
+
+        .container {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .main-content {
+            margin-left: 240px; /* Adjusted for sidebar width */
+            padding: 20px;
+        }
+        .sidebar {
+            position: fixed;
+            top: 56px; /* Height of the navbar */
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            padding: 0;
+            background-color: #007bff; /* Updated background color */
+            color: #ecf0f1; /* Updated text color */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-sticky {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        .sidebar .nav-link {
+            font-weight: 500;
+            color: #ecf0f1; /* Updated text color */
+        }
+
+        .sidebar .nav-link.active {
+            background-color: #2c3e50; /* Updated background color */
+            color: #ffffff;
+        }
+
+        .main-content {
+            margin-top: 20px;
+        }
+
+        .welcome-message {
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Side Navigation -->
+        <nav class="col-md-2 d-md-block sidenav">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('fetch_grievances') }}">
+                            Admin Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('add_students') }}">
+                            Add Student
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('logout') }}">
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 main-content">
+            <h2 class="welcome-message">Admin Dashboard</h2>
+            <p>Welcome, {{ username }}!</p>
+
+            <!-- Table to display grievances -->
+            <div class="table-container">
+                <center><b><h3>Urgent Grievances</h3></b></center>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student Name</th>
+                            <th>Grievance Text</th>
+                            <th>Urgency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for grievance in grievances %}
+                        {% if grievance.urgency == 'urgent' %}
+                            <tr>
+                                <td>{{ grievance.id }}</td>
+                                <td>{{ grievance.student_username }}</td>
+                                <td>{{ grievance.grievace_text }}</td>
+                                <td>{{ grievance.urgency }}</td>
+                                <td>{{ grievance.Status }}</td>
+                                <td>
+                                    {% if grievance.Status=="Submitted" %}
+                                    <button class="btn btn-primary address-btn" data-grievance-id="{{ grievance.id }}">Address</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-container">
+                <center><h3>Less Urgent Grievances</h3></center>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student Name</th>
+                            <th>Grievance Text</th>
+                            <th>Urgency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for grievance in grievances %}
+                        {% if grievance.urgency == 'not urgent' %}
+                            <tr>
+                                <td>{{ grievance.id }}</td>
+                                <td>{{ grievance.student_username }}</td>
+                                <td>{{ grievance.grievace_text }}</td>
+                                <td>{{ grievance.urgency }}</td>
+                                <td>{{ grievance.Status }}</td>
+                                <td>
+                                    {% if grievance.Status=="Submitted" %}
+                                    <button class="btn btn-primary address-btn" data-grievance-id="{{ grievance.id }}">Address</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('.address-btn').click(function() {
+            var grievanceId = $(this).data('grievance-id');
+
+            // Send AJAX request
+            $.ajax({
+                type: 'POST',
+                url: '/address_grievance',
+                data: { 'grievance_id': grievanceId },
+                success: function(response) {
+                    // Handle the success response
+                location.replace("/fetch_grievances")
+                    alert(response.message);
+                    // You can also update the UI as needed
+                },
+                error: function(error) {
+                    // Handle the error
+                    console.error('Error addressing grievance:', error);
+                }
+            });
+        });
+    });
+</script>
+
+<!-- Bootstrap JS and Popper.js (Optional) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
